@@ -1,0 +1,15 @@
+<div class='container-fluid'>
+    <div class='row'>
+        <div class='col-sm-9 body-content'>
+			<input [(ngModel)]="login" type="text" />
+			<br />
+			<input [(ngModel)]="password" type="text" />
+			<br />
+			<button (click)="logIn()">Login</button>
+			<br />
+			<button (click)="logInVk()">Login VK</button>
+			<br /><br /><br /><br />
+			<button (click)="getProtected()">Check auth</button>
+        </div>
+    </div>
+</div>
