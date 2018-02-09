@@ -1,0 +1,43 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <script>
+      // if we don't receive an access token then login failed and/or the user has not connected properly
+
+	  function getParameterByName(name, url) {
+		  //var url = new URL(window.location.href);
+		  //return url.getParameterByName(name);
+		  if (!url) url = window.location.href;
+		  name = name.replace(/[\[\]]/g, "\\$&");
+		  var regex = new RegExp("[?&#]" + name + "(=([^&#]*)|&|#|$)"),
+			  results = regex.exec(url);
+		  if (!results) return null;
+		  if (!results[2]) return '';
+		  return decodeURIComponent(results[2].replace(/\+/g, " "));
+	  }
+
+
+	  var accessToken = getParameterByName("access_token");
+	  var email = getParameterByName("email");
+      var message = {};
+      if (accessToken) {
+        message.status = true;
+		message.accessToken = accessToken;
+		message.email = email;
+      }
+      else {
+        message.status = false;
+        message.error = getParameterByName("error");
+        message.errorDescription = getParameterByName("error_description");
+      }
+      window.opener.postMessage(JSON.stringify(message), "http://localhost:57927");
+
+  </script>
+</body>
+</html>

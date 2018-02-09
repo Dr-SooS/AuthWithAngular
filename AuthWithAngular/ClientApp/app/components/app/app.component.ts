@@ -9,14 +9,41 @@ import { CookieService } from 'ng2-cookies';
 })
 export class AppComponent {
 
-  host = "http://localhost:57927/";
-  login: string = "adfadsf@gmail.com";
-  password: string = "_QQQwww111";
+	private authWindow: Window;
+	host = "http://localhost:57927/";
+	login: string = "adfadsf@gmail.com";
+	password: string = "_QQQwww111";
 
-  constructor(
-	  private http: Http,
-    public cookieService: CookieService
-  ) { }
+	constructor(
+		private http: Http,
+		public cookieService: CookieService
+	) {
+		if (window.addEventListener) {
+			window.addEventListener("message", this.handleMessage.bind(this), false);
+		} else {
+			(<any>window).attachEvent("onmessage", this.handleMessage.bind(this));
+		}
+	}
+
+	handleMessage(event: Event) {
+		const message = event as MessageEvent;
+		// Only trust messages from the below origin.
+		if (message.origin !== "http://localhost:57927") return;
+
+		const result = JSON.parse(message.data);
+		if (!result.status) {
+			console.log("error");
+		}
+		else {
+			console.log(result.accessToken);
+			this.http.post(this.host + "api/account/vk", { "token": result.accessToken, "email": result.email }).subscribe(res => {
+				this.cookieService.set('token', res.json());
+				console.log(res.json());
+			});
+		}
+
+		this.authWindow.close();
+	}
 
   logIn(): any {
     this.http.post(this.host + 'api/account/login', {
@@ -28,12 +55,13 @@ export class AppComponent {
     })
   }
 
-  logInVk(): any {
-    window.location.href = "https://oauth.vk.com/authorize?client_id=6363088&redirect_uri=http://localhost:57927/api/account/vk&scope=email";
-    //this.http.get("https://oauth.vk.com/authorize?client_id=6363088&redirect_uri=http://localhost:51693/api/account/vk&scope=email").subscribe(data => {
-    //  console.log(data);
-    //})
+  launchVkLogIn(): any {
+	  this.authWindow = window.open("https://oauth.vk.com/authorize?client_id=6363088&display=page&redirect_uri=http://localhost:57927/vk-auth.html&scope=email&response_type=token"/*, null, 'width=600,height=400'*/);
+	  //this.http.get("https://oauth.vk.com/authorize?client_id=6363088&redirect_uri=http://localhost:51693/api/account/vk&scope=email").subscribe(data => {
+	  //  console.log(data);
+	  //})
   }
+
 
   getProtected(): any {
 

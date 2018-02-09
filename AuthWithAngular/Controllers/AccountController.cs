@@ -65,15 +65,11 @@ namespace AuthApp.Controllers
 			throw new ApplicationException("INVALID_LOGIN_ATTEMPT");
 		}
 
-		[HttpGet]
-		public async Task<object> Vk([FromQuery] string code)
+		[HttpPost]
+		public async Task<object> Vk([FromBody] VkTokenDto token)
 		{
-			var clientId = "6363088";
-			var clientSecret = "bjiZXGsLlgJdh0gvPYhK";
-			var redirectUri = "http://localhost:57927/api/account/vk";
-			var appAccessTokenResponse = await client.GetStringAsync($"https://oauth.vk.com/access_token?client_id={clientId}&client_secret={clientSecret}&redirect_uri={redirectUri}&code={code}");
-			VkTokenDto token = JsonConvert.DeserializeObject<VkTokenDto>(appAccessTokenResponse);
-			//var user = await client.GetStringAsync($"https://api.vk.com/method/users.get?access_token={token.AccessToken}");
+			
+			//var user = await client.GetStringAsync($"https://api.vk.com/method/users.get?access_token={accessToken.Token}");
 
 			var user = await _userManager.FindByEmailAsync(token.Email);
 			if(user == null)
@@ -151,6 +147,12 @@ namespace AuthApp.Controllers
 			[Required]
 			public string Password { get; set; }
 
+		}
+
+		public class VkTokenDto
+		{
+			public string Token { get; set; }
+			public string Email { get; set; }
 		}
 
 		public class RegisterDto
