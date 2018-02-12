@@ -3,7 +3,8 @@ import { Http, Headers, RequestOptions } from '@angular/http';
 import { CookieService } from 'ng2-cookies';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { HostService } from '../../services/host.service'
+import { HostService } from '../../services/host.service';
+import { User } from '../../models/user'
 
 @Component({
     selector: 'users',
@@ -11,6 +12,9 @@ import { HostService } from '../../services/host.service'
     //styleUrls: ['./login.component.css']
 })
 export class UsersComponent {
+
+	users: User[];
+	currentUser: User;
 
     constructor(
         private http: Http,
@@ -22,6 +26,21 @@ export class UsersComponent {
 	ngOnInit() {
 		if (!this.cookieService.get('token'))
 			this.router.navigate(['login']);
+
+		let headers = new Headers();
+		headers.append('Content-Type', 'application/json');
+		headers.append('Authorization', `Bearer ${this.cookieService.get("token")}`);
+		let options = new RequestOptions({ headers: headers });
+
+		this.http.get(this.host.host + '/api/useractions/currentuser', options).subscribe(res => {
+			this.currentUser = res.json() as User;
+			console.log(this.currentUser);
+		})
+
+		this.http.get(this.host.host + '/api/users').subscribe(res => {
+			this.users = res.json() as User[];
+			console.log(this.users);
+		})
 	}
 
     getProtected(): any {

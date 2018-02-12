@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <None Remove="ClientApp\app\components\login\login.component.ts" />
+    <None Remove="ClientApp\app\models\user.ts" />
     <None Remove="ClientApp\app\services\auth.service.ts" />
     <None Remove="ClientApp\app\services\host.service.ts" />
     <None Remove="ClientApp\app\services\user.service.ts" />
@@ -30,6 +31,7 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\components\login\login.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\user.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\auth.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\host.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\user.service.ts" />

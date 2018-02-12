@@ -8,6 +8,8 @@ using AuthWithAngular.Models;
 using AuthApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuthWithAngular.Controllers
 {
@@ -28,6 +30,15 @@ namespace AuthWithAngular.Controllers
 			_userManager = userManager;
 			_roleManager = roleManager;
 			_context = context;
+		}
+
+		[Authorize]
+		[HttpGet]
+		public async Task<IActionResult> CurrentUser()
+		{
+			var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimsIdentity.DefaultNameClaimType).Value);
+			var roles = await _userManager.GetRolesAsync(user);
+			return Ok(new UserFrontDto { Id = user.Id, Email = user.Email, Blocked = user.Blocked, Role = roles[0] });
 		}
 
 		[ActionName("blocked")]
