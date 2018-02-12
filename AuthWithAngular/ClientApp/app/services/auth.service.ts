@@ -14,10 +14,17 @@ export class AuthService {
     ) { }
 
     logIn(login: string, password: string): Observable<any> {
-        return this.http.post(this.host.host + 'api/account/login', {
+        return this.http.post(this.host.host + '/api/account/login', {
             "email": login,
             "password": password
         });
-    }
+	}
+
+	logInVk(token: string, email: string): Observable<any> {
+		return this.http.post(this.host.host + "/api/account/vk", {
+			"token": token,
+			"email": email
+		});
+	}
 
 }

@@ -1,8 +1,9 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { CookieService } from 'ng2-cookies';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { HostService } from '../../services/host.service'
 
 @Component({
     selector: 'protected',
@@ -11,13 +12,17 @@ import { Router } from '@angular/router';
 })
 export class ProtectedComponent {
 
-    host = "http://localhost:61832/";
-
     constructor(
         private http: Http,
-        public cookieService: CookieService,
+		public cookieService: CookieService,
+		public host: HostService,
+		public router: Router
     ) {}
 
+	ngOnInit() {
+		if (!this.cookieService.get('token'))
+			this.router.navigate(['login']);
+	}
 
     getProtected(): any {
 
@@ -26,8 +31,13 @@ export class ProtectedComponent {
         headers.append('Authorization', `Bearer ${this.cookieService.get("token")}`);
         let options = new RequestOptions({ headers: headers });
 
-        this.http.get(this.host + "api/account/protected", options).subscribe(data => {
+        this.http.get(this.host.host + "/api/account/protected", options).subscribe(data => {
             console.log(data);
         });
-    }
+	}
+
+	logOut() {
+		this.cookieService.delete('token');
+		this.router.navigate(['login']);
+	}
 }

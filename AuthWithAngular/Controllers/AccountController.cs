@@ -43,12 +43,12 @@ namespace AuthApp.Controllers
 			_roleManager = roleManager;
 		}
 
-		[Authorize(Roles = "admin, user")]
+		[Authorize(Roles = "user")]
 		[HttpGet]
 		public async Task<object> Protected()
 		{
-			//await _userManager.AddToRoleAsync(await _userManager.GetUserAsync(User), "admin");
-			return "Protected area";
+			var user = await _userManager.FindByNameAsync(User.FindFirst(ClaimsIdentity.DefaultNameClaimType).Value);
+			return user;
 		}
 
 		[HttpPost]
@@ -68,9 +68,6 @@ namespace AuthApp.Controllers
 		[HttpPost]
 		public async Task<object> Vk([FromBody] VkTokenDto token)
 		{
-			
-			//var user = await client.GetStringAsync($"https://api.vk.com/method/users.get?access_token={accessToken.Token}");
-
 			var user = await _userManager.FindByEmailAsync(token.Email);
 			if(user == null)
 			{
@@ -111,18 +108,11 @@ namespace AuthApp.Controllers
 		private async Task<object> GenerateJwtToken(string email, User user)
 		{
 			var roles = await _userManager.GetRolesAsync(user);
-			//var claims = new List<Claim>
-			//{
-			//	new Claim(JwtRegisteredClaimNames.Sub, email),
-			//	new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-			//	new Claim(ClaimTypes.NameIdentifier, user.Id),
-			//	new Claim(ClaimTypes.Role, roles[1])
-			//};
 
 			var claims = new List<Claim>
 			{
 				new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
-				new Claim(ClaimsIdentity.DefaultRoleClaimType, roles[1])
+				new Claim(ClaimsIdentity.DefaultRoleClaimType, roles[0])
 			};
 
 			var creds = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"])), SecurityAlgorithms.HmacSha256);

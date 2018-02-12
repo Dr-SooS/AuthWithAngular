@@ -6,7 +6,7 @@ export class HostService {
     public host: string;
 
     constructor() {
-        this.host = 'http://localhost:61832/';
+        this.host = 'http://localhost:57927';
     }
 
 }
