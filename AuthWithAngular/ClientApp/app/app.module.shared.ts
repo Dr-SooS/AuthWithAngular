@@ -10,13 +10,13 @@ import { HostService } from './services/host.service';
 
 import { AppComponent } from './components/app/app.component';
 import { LoginComponent } from './components/login/login.component';
-import { ProtectedComponent } from './components/protected/protected.component';
+import { UsersComponent } from './components/users/users.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         LoginComponent,
-        ProtectedComponent
+		UsersComponent
     ],
     imports: [
         CommonModule,
@@ -25,7 +25,7 @@ import { ProtectedComponent } from './components/protected/protected.component';
         RouterModule.forRoot([
             { path: '', redirectTo: 'login', pathMatch: 'full' },
             { path: 'login', component: LoginComponent },
-            { path: 'protected', component: ProtectedComponent },
+			{ path: 'users', component: UsersComponent },
             { path: '**', redirectTo: 'login' }
         ])
     ],

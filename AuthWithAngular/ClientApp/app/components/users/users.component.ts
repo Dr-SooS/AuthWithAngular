@@ -6,11 +6,11 @@ import { Router } from '@angular/router';
 import { HostService } from '../../services/host.service'
 
 @Component({
-    selector: 'protected',
-    template: require('./protected.component.html')
+    selector: 'users',
+    template: require('./users.component.html')
     //styleUrls: ['./login.component.css']
 })
-export class ProtectedComponent {
+export class UsersComponent {
 
     constructor(
         private http: Http,

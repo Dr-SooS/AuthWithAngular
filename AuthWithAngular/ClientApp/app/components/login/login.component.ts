@@ -32,7 +32,7 @@ export class LoginComponent {
 		}
 
 		if (this.cookieService.get('token'))
-			this.router.navigate(['protected']);
+			this.router.navigate(['users']);
 	}
 
     handleMessage(event: Event) {
@@ -48,7 +48,7 @@ export class LoginComponent {
 			console.log(result.accessToken);
 			this.authService.logInVk(result.accessToken, result.email).subscribe(res => {
 				this.cookieService.set('token', res.json());
-				this.router.navigate(['protected']);
+				this.router.navigate(['users']);
                 console.log(res.json());
             });
         }
@@ -59,7 +59,7 @@ export class LoginComponent {
     logIn(): any {
         this.authService.logIn(this.login, this.password).subscribe(token => {
             this.cookieService.set('token', token.json());
-            this.router.navigate(['protected']);
+            this.router.navigate(['users']);
             console.log(token.json());
         })
     }
