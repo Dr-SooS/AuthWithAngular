@@ -6,9 +6,15 @@
         </div>
     </div>
 	<div class="row">
-		<div class="col-md-12">
-			<span class="col-md-4">{{currentUser.id}}</span>
-			<span class="col-md-4">{{currentUser.email}}</span>
+		<div class="col-md-12" *ngFor="let user of users">
+			<span class="col-md-3">{{user.id}}</span>
+			<span class="col-md-3">{{user.email}}</span>
+			<select class="col-md-3" [(ngModel)]="user.role" (ngModelChange)="onRoleChange(user)">
+				<option [value]="'user'">User</option>
+				<option [value]="'moderator'">Moderator</option>
+				<option [value]="'admin'">Admin</option>
+			</select>
+			<input class="col-md-3" type="checkbox" [(ngModel)]="user.blocked" (ngModelChange)="onBlockedChange(user)"/>
 		</div>
 	</div>
 </div>

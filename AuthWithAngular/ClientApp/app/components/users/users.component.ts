@@ -43,6 +43,20 @@ export class UsersComponent {
 		})
 	}
 
+	onRoleChange(user: User) {
+		this.http.post(this.host.host + '/api/useractions/role/' + user.id, user).subscribe(res => {
+			user = res.json();
+			console.log(user);
+		})
+	}
+
+	onBlockedChange(user: User) {
+		this.http.post(this.host.host + '/api/useractions/blocked/' + user.id + '?new_state=' + user.blocked, null).subscribe(res => {
+			user = res.json();
+			console.log(user);
+		})
+	}
+
     getProtected(): any {
 
         let headers = new Headers();

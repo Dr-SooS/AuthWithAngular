@@ -41,6 +41,33 @@ namespace AuthWithAngular.Controllers
 			return Ok(new UserFrontDto { Id = user.Id, Email = user.Email, Blocked = user.Blocked, Role = roles[0] });
 		}
 
+		[ActionName("role")]
+		[HttpPost("{id}")]
+		public async Task<IActionResult> UpadateRole([FromRoute] string id, [FromBody] UserFrontDto userDto)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			if (id != userDto.Id)
+			{
+				return BadRequest();
+			}
+
+			var user = await _context.AuthAppUsers.SingleOrDefaultAsync(m => m.Id == id);
+
+			var roles = await _userManager.GetRolesAsync(user);
+			await _userManager.RemoveFromRolesAsync(user, roles.ToArray());
+			await _userManager.AddToRoleAsync(user, userDto.Role);
+
+			await _context.SaveChangesAsync();
+
+			roles = await _userManager.GetRolesAsync(user);
+			return Ok(new UserFrontDto { Id = user.Id, Email = user.Email, Blocked = user.Blocked, Role = roles[0] });
+
+		}
+
 		[ActionName("blocked")]
 		[HttpPost("{id}")]
 		public async Task<IActionResult> ChangeBlockedState([FromRoute] string id, [FromQuery(Name = "new_state")] bool newState)

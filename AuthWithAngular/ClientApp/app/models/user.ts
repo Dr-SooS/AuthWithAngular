@@ -1,6 +1,6 @@
 ﻿export class User {
-	Id: string;
-	Email: string;
-	Blocked: boolean;
-	Role: string;
+	id: string;
+	email: string;
+	blocked: boolean;
+	role: string;
 }
